@@ -2,6 +2,7 @@
 #include "chunk.h"
 #include <stdint.h>
 #include <stdio.h>
+#include <sys/types.h>
 
 void disassembleChunk(Chunk *chunk, const char *name) {
   printf("== %s ==\n", name);
@@ -15,12 +16,23 @@ static int simpleInstruction(const char *name, int offset) {
   return offset + 1;
 }
 
+static int simpleConstant(const char *name, Chunk *chunk, int offset) {
+  uint8_t constant = chunk->code[offset + 1];
+  printf("%-16s %4d", name, constant);
+  Value value = chunk->constants.values[constant];
+  printValue(value);
+  printf("'\n");
+  return offset + 1;
+}
+
 int disassembleInstruction(Chunk *chunk, int offset) {
   printf("%04d ", offset);
   uint8_t instruction = chunk->code[offset];
   switch (instruction) {
   case OP_RETURN:
     return simpleInstruction("OP_RETURN", offset);
+  case OP_CONSTANT:
+    return simpleConstant("OP_CONSTANT", chunk, offset);
   default:
     printf("unknown opcode %d\n", instruction);
     return offset + 1;
