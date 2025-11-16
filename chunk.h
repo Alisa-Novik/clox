@@ -1,12 +1,19 @@
 #ifndef clox_chunk_h
 #define clox_chunk_h
-#include "common.h"
 #include "values.h"
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 
-typedef enum { OP_CONSTANT, OP_RETURN } OpCode;
+typedef enum {
+  OP_CONSTANT,
+  OP_RETURN,
+  OP_ADD,
+  OP_SUBTRACT,
+  OP_MULTIPLY,
+  OP_DIVIDE,
+  OP_NEGATE,
+} OpCode;
 
 typedef struct {
   int count;
