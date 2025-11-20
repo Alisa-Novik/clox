@@ -135,7 +135,6 @@ static InterpretResult run() {
         return INTERPRET_RUNTIME_ERROR;
       }
       push(value);
-      pop();
       break;
     }
     case OP_DEFINE_GLOBAL: {

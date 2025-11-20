@@ -394,8 +394,8 @@ bool compile(const char *source, Chunk *chunk) {
   while (!match(TOKEN_EOF)) {
     declaraction();
   }
-  expression();
-  consume(TOKEN_EOF, "Expect end of expression");
+  // expression();
+  // consume(TOKEN_EOF, "Expect end of expression");
   endCompiler();
   return !parser.hadError;
 }
