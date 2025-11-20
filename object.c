@@ -56,6 +56,10 @@ void printObject(Value value) {
   }
 }
 
+bool isObjType(Value value, ObjType type) {
+  return IS_OBJ(value) && AS_OBJ(value)->type == type;
+}
+
 ObjString *takeString(char *chars, int length) {
   uint32_t hash = hashString(chars, length);
   ObjString *interned = tableFindString(&vm.strings, chars, length, hash);
