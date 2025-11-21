@@ -17,6 +17,7 @@ typedef enum {
   OP_ADD,
   OP_POP,
   OP_LOOP,
+  OP_CALL,
   OP_GET_LOCAL,
   OP_SET_LOCAL,
   OP_GET_GLOBAL,
