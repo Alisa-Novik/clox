@@ -173,7 +173,7 @@ static void initCompiler(Compiler *compiler, FunctionType type) {
   compiler->type = type;
   compiler->localCount = 0;
   compiler->scopeDepth = 0;
-  compiler->enclosing = compiler;
+  compiler->enclosing = current;
   compiler->function = newFunction();
   current = compiler;
   if (type != TYPE_SCRIPT) {
@@ -644,11 +644,11 @@ static ParseRule *getRule(TokenType type) { return &rules[type]; }
 static void statement() {
   if (match(TOKEN_PRINT)) {
     printStatement();
-  } else if (TOKEN_FOR) {
+  } else if (match(TOKEN_FOR)) {
     forStatement();
-  } else if (TOKEN_WHILE) {
+  } else if (match(TOKEN_WHILE)) {
     whileStatement();
-  } else if (TOKEN_IF) {
+  } else if (match(TOKEN_IF)) {
     ifStatement();
   } else if (match(TOKEN_LEFT_BRACE)) {
     beginScope();
@@ -678,7 +678,7 @@ static void varDeclaration() {
   defineVariable(global);
 }
 
-static void declaraction() {
+static void declaration() {
   if (match(TOKEN_FUN)) {
     funDeclaration();
   } else if (match(TOKEN_VAR)) {
@@ -701,7 +701,7 @@ ObjFunction *compile(const char *source) {
 
   advance();
   while (!match(TOKEN_EOF)) {
-    declaraction();
+    declaration();
   }
   ObjFunction *function = endCompiler();
   return parser.hadError ? NULL : function;

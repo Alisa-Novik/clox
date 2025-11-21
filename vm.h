@@ -12,6 +12,12 @@
 #define STACK_MAX (FRAMES_MAX * UINT8_COUNT)
 
 typedef struct {
+  ObjFunction *function;
+  uint8_t *ip;
+  Value *slots;
+} CallFrame;
+
+typedef struct {
   CallFrame frames[FRAMES_MAX];
   int frameCount;
 
@@ -21,12 +27,6 @@ typedef struct {
   Table strings;
   Obj *objects;
 } VM;
-
-typedef struct {
-  ObjFunction *function;
-  uint8_t *ip;
-  Value *slots;
-} CallFrame;
 
 typedef enum {
   INTERPRET_OK,
