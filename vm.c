@@ -54,6 +54,10 @@ static void defineNative(const char *name, NativeFn function) {
   pop();
 }
 
+static Value clockNative(int argCount, Value *args) {
+  return NUMBER_VAL((double)clock() / CLOCKS_PER_SEC);
+}
+
 void initVM() {
   resetStack();
   vm.objects = NULL;
