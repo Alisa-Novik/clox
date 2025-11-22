@@ -6,6 +6,7 @@
 #include "object.h"
 #include "table.h"
 #include "values.h"
+#include <stddef.h>
 #include <stdint.h>
 
 #define FRAMES_MAX 64
@@ -25,8 +26,14 @@ typedef struct {
   Value *stackTop;
   Table globals;
   Table strings;
-  ObjUpvalue* openUpvalues;
+  ObjUpvalue *openUpvalues;
+  size_t bytesAllocated;
+  size_t nextGC;
   Obj *objects;
+
+  int grayCount;
+  int grayCapacity;
+  Obj **grayStack;
 } VM;
 
 typedef enum {
