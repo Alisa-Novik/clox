@@ -7,6 +7,7 @@
 
 typedef enum {
   OP_CONSTANT,
+  OP_CLOSURE,
   OP_NIL,
   OP_TRUE,
   OP_FALSE,
@@ -16,10 +17,13 @@ typedef enum {
   OP_RETURN,
   OP_ADD,
   OP_POP,
+  OP_CLOSE_UPVALUE,
   OP_LOOP,
   OP_CALL,
   OP_GET_LOCAL,
   OP_SET_LOCAL,
+  OP_GET_UPVALUE,
+  OP_SET_UPVALUE,
   OP_GET_GLOBAL,
   OP_SET_GLOBAL,
   OP_DEFINE_GLOBAL,
