@@ -19,7 +19,7 @@ static Obj *allocateObject(size_t size, ObjType type) {
   object->next = vm.objects;
   vm.objects = object;
 #ifdef DEBUG_LOG_GC
-  printf("%p allocate %zu for %d\n", (void*)object, size, type);
+  printf("%p allocate %zu for %d\n", (void *)object, size, type);
 #endif
   return object;
 }
@@ -82,6 +82,12 @@ ObjString *copyString(const char *chars, int length) {
   return allocateString(heapChars, length, hash);
 }
 
+ObjClass *newClass(ObjString *name) {
+  ObjClass* klass = ALLOCATE_OBJ(ObjClass, OBJ_CLASS);
+  klass->name = name;
+  return klass;
+}
+
 ObjUpvalue *newUpvalue(Value *slot) {
   ObjUpvalue *upvalue = ALLOCATE_OBJ(ObjUpvalue, OBJ_UPVALUE);
   upvalue->location = slot;
@@ -114,6 +120,9 @@ void printObject(Value value) {
     break;
   case OBJ_STRING:
     printf("%s", AS_CSTRING(value));
+    break;
+  case OBJ_CLASS:
+    printf("%s", AS_CLASS(value)->name->chars);
     break;
   }
 }

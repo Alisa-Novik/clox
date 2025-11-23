@@ -3,6 +3,7 @@
 #include "memory.h"
 #include "values.h"
 #include <string.h>
+#include <sys/types.h>
 #ifdef DEBUG_PRINT_CODE
 #include "debug.h"
 #endif
@@ -87,9 +88,11 @@ static void errorAt(Token *token, const char *message) {
   } else if (token->type == TOKEN_ERROR) {
     // Nothing
   } else {
-    fprintf(stderr, ": %s\n", message);
-    parser.hadError = true;
+    fprintf(stderr, " at '%.*s'", token->length, token->start);
   }
+
+  fprintf(stderr, ": %s\n", message);
+  parser.hadError = true;
 }
 
 static void error(const char *message) { errorAt(&parser.previous, message); }
@@ -587,7 +590,7 @@ static void addLocal(Token name) {
     return;
   }
 
-  Local *local = &current->locals[current->localCount];
+  Local *local = &current->locals[current->localCount++];
   local->name = name;
   local->depth = -1;
   local->isCaptured = false;
@@ -622,7 +625,7 @@ static void namedVariable(Token name, bool canAssign) {
     getOp = OP_GET_UPVALUE;
     setOp = OP_SET_UPVALUE;
   } else {
-    int arg = identifierConstant(&name);
+    arg = identifierConstant(&name);
     getOp = OP_GET_GLOBAL;
     setOp = OP_SET_GLOBAL;
   }
@@ -754,6 +757,18 @@ static void statement() {
   }
 }
 
+static void classDeclaration() {
+  consume(TOKEN_IDENTIFIER, "Expect class name.");
+  uint8_t nameConstant = identifierConstant(&parser.previous);
+  declareVariable();
+
+  emitBytes(OP_CLASS, nameConstant);
+  defineVariable(nameConstant);
+
+  consume(TOKEN_LEFT_BRACE, "Expect '{' before class body");
+  consume(TOKEN_RIGHT_BRACE, "Expect '}' before class body");
+}
+
 static void funDeclaration() {
   uint8_t global = parseVariable("Expect function name.");
   markInitialized();
@@ -776,6 +791,8 @@ static void varDeclaration() {
 static void declaration() {
   if (match(TOKEN_FUN)) {
     funDeclaration();
+  } else if (match(TOKEN_CLASS)) {
+    classDeclaration();
   } else if (match(TOKEN_VAR)) {
     varDeclaration();
   } else {
@@ -805,7 +822,7 @@ ObjFunction *compile(const char *source) {
 void markCompilerRoots() {
   Compiler *compiler = current;
   while (compiler != NULL) {
-    markObject((Obj*)compiler->function);
+    markObject((Obj *)compiler->function);
     compiler = compiler->enclosing;
   }
 }

@@ -53,7 +53,7 @@ void markObject(Obj *object) {
       exit(1);
   }
 
-  vm.grayStack[vm.grayCount] = object;
+  vm.grayStack[vm.grayCount++] = object;
 }
 
 static void freeObject(Obj *object) {
@@ -149,6 +149,11 @@ static void blackenObject(Obj *object) {
     for (int i = 0; i < closure->upvalueCount; i++) {
       markObject((Obj *)closure->upvalues[i]);
     }
+    break;
+  }
+  case OBJ_CLASS: {
+    ObjClass *klass = (ObjClass *)object;
+    markObject((Obj *)klass->name);
     break;
   }
   }

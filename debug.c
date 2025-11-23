@@ -67,6 +67,8 @@ int disassembleInstruction(Chunk *chunk, int offset) {
     return simpleConstant("OP_GET_GLOBAL", chunk, offset);
   case OP_DEFINE_GLOBAL:
     return simpleConstant("OP_DEFINE_GLOBAL", chunk, offset);
+  case OP_CLASS:
+    return simpleConstant("OP_CLASS", chunk, offset);
   case OP_CLOSE_UPVALUE:
     return simpleInstruction("OP_CLOSE_UPVALUE", offset);
   case OP_POP:

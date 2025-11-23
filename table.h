@@ -1,5 +1,5 @@
-#ifndef clox_scanner_h
-#define clox_scanner_h
+#ifndef clox_table_h
+#define clox_table_h
 
 #include "values.h"
 #include <stdbool.h>
