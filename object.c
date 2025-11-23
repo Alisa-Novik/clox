@@ -82,8 +82,15 @@ ObjString *copyString(const char *chars, int length) {
   return allocateString(heapChars, length, hash);
 }
 
+ObjInstance *newInstance(ObjClass *klass) {
+  ObjInstance *instance = ALLOCATE_OBJ(ObjInstance, OBJ_INSTANCE);
+  instance->klass = klass;
+  initTable(&instance->fields);
+  return instance;
+}
+
 ObjClass *newClass(ObjString *name) {
-  ObjClass* klass = ALLOCATE_OBJ(ObjClass, OBJ_CLASS);
+  ObjClass *klass = ALLOCATE_OBJ(ObjClass, OBJ_CLASS);
   klass->name = name;
   return klass;
 }
@@ -123,6 +130,9 @@ void printObject(Value value) {
     break;
   case OBJ_CLASS:
     printf("%s", AS_CLASS(value)->name->chars);
+    break;
+  case OBJ_INSTANCE:
+    printf("instance of %s", AS_INSTANCE(value)->klass->name->chars);
     break;
   }
 }

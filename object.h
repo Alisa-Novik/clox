@@ -87,6 +87,7 @@ typedef struct {
   int upvalueCount;
 } ObjClosure;
 
+ObjInstance *newInstance(ObjClass *klass);
 ObjClass *newClass(ObjString *name);
 ObjClosure *newClosure(ObjFunction *function);
 ObjFunction *newFunction();
